@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel geral · TrilhaViva</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300..900;1,300..900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-stamp">TV</div>
+      <div class="sidebar-brand-text">
+        <strong>TrilhaViva</strong>
+        <small>Gestão de viagens</small>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="sidebar-nav-label">Navegação</span>
+      <a href="index.html" class="nav-item" data-nav="dashboard"><i class="fa-solid fa-chart-pie"></i> Painel geral</a>
+      <a href="pessoas.html" class="nav-item" data-nav="pessoas"><i class="fa-solid fa-users"></i> Pessoas</a>
+      <a href="viagens.html" class="nav-item" data-nav="viagens"><i class="fa-solid fa-plane"></i> Viagens</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <strong>TrilhaViva</strong> · protótipo v1<br>
+      Dados salvos localmente no navegador.
+    </div>
+  </aside>
+  <div id="sidebar-overlay"></div>
+
+  <!-- ===================== CONTEÚDO ===================== -->
+  <div class="main-content">
+
+    <header class="topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+
+      <div class="topbar-greeting">
+        <strong id="greeting-text">Olá 👋</strong>
+        <small id="greeting-date"></small>
+      </div>
+
+      <div class="topbar-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="global-search" placeholder="Buscar pessoas ou viagens…">
+      </div>
+
+      <div class="topbar-actions">
+        <div style="position:relative;">
+          <button class="icon-btn" id="notif-bell-btn" aria-label="Notificações">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge hidden" id="notif-badge">0</span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown">
+            <div class="notif-dropdown-header"><i class="fa-solid fa-cake-candles"></i> Próximos aniversários</div>
+            <div class="notif-list" id="notif-list"></div>
+          </div>
+        </div>
+        <div class="user-chip">
+          <span class="avatar-circle avatar-sm" style="background:#FFE1DC;color:#D8452F;">MD</span>
+          <span>
+            <strong>Manu Duarte</strong>
+            <small>Consultora de viagens</small>
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <div class="page-header">
+        <h1>Painel geral</h1>
+        <p>Um resumo rápido de tudo que está acontecendo nas viagens que você gerencia.</p>
+      </div>
+
+      <!-- STAT TICKETS -->
+      <section class="stats-grid" id="stats-grid"></section>
+
+      <!-- GRÁFICOS -->
+      <section class="dashboard-grid">
+        <div class="panel">
+          <h3 class="section-title"><i class="fa-solid fa-sack-dollar"></i> Financeiro por viagem</h3>
+          <p style="font-size:.8rem;color:var(--ink-soft);margin-top:-.6rem;margin-bottom:1rem;">Valor total contratado vs. valor já pago, por viagem</p>
+          <div style="height:280px;"><canvas id="chart-financeiro"></canvas></div>
+        </div>
+        <div class="panel">
+          <h3 class="section-title"><i class="fa-solid fa-route"></i> Status das viagens</h3>
+          <p style="font-size:.8rem;color:var(--ink-soft);margin-top:-.6rem;margin-bottom:1rem;">Distribuição atual da carteira</p>
+          <div style="height:280px;display:flex;align-items:center;justify-content:center;"><canvas id="chart-status"></canvas></div>
+        </div>
+      </section>
+
+      <!-- WIDGETS -->
+      <section class="widgets-grid">
+        <div class="panel">
+          <h3 class="section-title"><i class="fa-solid fa-cake-candles"></i> Próximos aniversários</h3>
+          <div id="aniversarios-widget"></div>
+        </div>
+        <div class="panel">
+          <h3 class="section-title"><i class="fa-solid fa-suitcase-rolling"></i> Próximas viagens</h3>
+          <div id="proximas-viagens-widget"></div>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top:1.25rem;">
+        <h3 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Destinos mais procurados</h3>
+        <div id="destinos-widget"></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===================== MODAL DE ANIVERSÁRIO DO DIA ===================== -->
+<div class="modal-overlay" id="birthday-modal">
+  <div class="modal-box">
+    <div class="birthday-modal-hero">
+      <span class="emoji">🎉</span>
+      <h2>Hoje tem aniversário!</h2>
+      <p>Que tal mandar uma mensagem carinhosa antes de fechar a próxima viagem?</p>
+    </div>
+    <div id="birthday-modal-list"></div>
+    <div class="modal-footer" style="justify-content:center;border-top:none;padding-top:0;">
+      <button class="btn btn-primary" id="birthday-modal-close">Combinado!</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="db.js"></script>
+<script src="utils.js"></script>
+<script src="layout.js"></script>
+<script src="dashboard.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initSidebarActiveState('dashboard');
+    checkTodaysBirthdaysModal();
+  });
+</script>
+</body>
+</html>
