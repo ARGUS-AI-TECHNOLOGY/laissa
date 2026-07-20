@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   syncGlobalSearch('viagens-busca');
 });
 
-/* ---------- Popular <select> de categorias dinamicamente ---------- */
 function popularFiltroCategorias() {
   const categorias = [...new Set(getViagens().map(v => v.categoria))].sort();
   const select = document.getElementById('viagens-categoria');
@@ -34,7 +33,6 @@ function aplicarParametrosDaURL() {
   if (busca) document.getElementById('viagens-busca').value = busca;
 }
 
-/* ---------- Render principal ---------- */
 function renderViagensGrid() {
   const termo = (document.getElementById('viagens-busca')?.value || '').toLowerCase().trim();
   const categoria = document.getElementById('viagens-categoria')?.value || '';
@@ -96,8 +94,7 @@ function renderViagensGrid() {
   grid.innerHTML = viagens.map(v => {
     const participantesInfo = v.participantes.map(id => pessoas.find(p => p.id === id)).filter(Boolean);
     const percentPago = v.valorTotal ? Math.min(100, Math.round((v.valorPago / v.valorTotal) * 100)) : 0;
-    const statusInfo = STATUS_STYLES[v.status] || STATUS_STYLES.Planejada;
-
+    
     return `
     <div class="trip-card" data-id="${v.id}">
       <div class="trip-card-cover" style="background-image:url('https://picsum.photos/seed/${encodeURIComponent(v.imagemSeed || v.id)}/600/400');">
@@ -118,7 +115,12 @@ function renderViagensGrid() {
 
         <div class="trip-card-participants">
           <div class="avatar-stack">
-            ${participantesInfo.slice(0, 4).map(p => `<span class="avatar-circle avatar-sm" style="${avatarStyle(p.avatarColor)}" title="${escapeHTML(p.nome)}">${getInitials(p.nome)}</span>`).join('')}
+            ${participantesInfo.slice(0, 4).map(p => {
+              const isTitular = p.id === v.responsavelId;
+              const bordaEstilo = isTitular ? 'border-color: #FFB627; z-index: 2;' : '';
+              const title = isTitular ? `${escapeHTML(p.nome)} (Titular)` : escapeHTML(p.nome);
+              return `<span class="avatar-circle avatar-sm" style="${avatarStyle(p.avatarColor)} ${bordaEstilo}" title="${title}">${getInitials(p.nome)}</span>`;
+            }).join('')}
             ${participantesInfo.length > 4 ? `<span class="avatar-circle avatar-sm" style="background:var(--ocean-mist);color:var(--ocean-deep);">+${participantesInfo.length - 4}</span>` : ''}
             ${participantesInfo.length === 0 ? '<small style="color:var(--ink-faint);">Sem participantes</small>' : ''}
           </div>
@@ -138,7 +140,6 @@ function renderViagensGrid() {
     btn.addEventListener('click', () => openConfirmDelete(btn.dataset.deleteViagem)));
 }
 
-/* ---------- Toolbar (busca, filtros, ordenação, chips de status) ---------- */
 function initViagensToolbar() {
   document.getElementById('viagens-busca').addEventListener('input', debounce(renderViagensGrid, 200));
   document.getElementById('viagens-categoria').addEventListener('change', renderViagensGrid);
@@ -166,7 +167,6 @@ function syncGlobalSearch(localInputId) {
   }, 150));
 }
 
-/* ---------- Modal: Nova / Editar viagem ---------- */
 function initViagemModal() {
   document.querySelectorAll('[data-close-modal="viagem-modal"]').forEach(btn =>
     btn.addEventListener('click', () => closeModal('viagem-modal')));
@@ -179,16 +179,31 @@ function initViagemModal() {
 function renderParticipantesCheckboxes(selecionados = []) {
   const pessoas = [...getPessoas()].sort((a, b) => a.nome.localeCompare(b.nome));
   const container = document.getElementById('v-participantes-grid');
+  
   if (pessoas.length === 0) {
     container.innerHTML = `<small style="color:var(--ink-faint);">Cadastre pessoas primeiro para vinculá-las a uma viagem.</small>`;
     return;
   }
+  
   container.innerHTML = pessoas.map(p => `
     <label class="checkbox-person">
       <input type="checkbox" value="${p.id}" ${selecionados.includes(p.id) ? 'checked' : ''}>
       <span class="avatar-circle avatar-sm" style="${avatarStyle(p.avatarColor)}">${getInitials(p.nome)}</span>
       ${escapeHTML(p.nome.split(' ')[0] + ' ' + p.nome.split(' ').slice(-1))}
     </label>`).join('');
+}
+
+// Popula a lista do select de Titular/Responsável
+function renderResponsavelSelect(selecionadoId = '') {
+  const pessoas = [...getPessoas()].sort((a, b) => a.nome.localeCompare(b.nome));
+  const select = document.getElementById('v-responsavel');
+  
+  select.innerHTML = '<option value="">Sem titular definido</option>' + 
+    pessoas.map(p => `
+      <option value="${p.id}" ${selecionadoId === p.id ? 'selected' : ''}>
+        ${escapeHTML(p.nome)}
+      </option>
+    `).join('');
 }
 
 function openViagemModal(id) {
@@ -210,9 +225,12 @@ function openViagemModal(id) {
     document.getElementById('v-valor-total').value = v.valorTotal || 0;
     document.getElementById('v-valor-pago').value = v.valorPago || 0;
     document.getElementById('v-observacoes').value = v.observacoes || '';
+    
+    renderResponsavelSelect(v.responsavelId || '');
     renderParticipantesCheckboxes(v.participantes || []);
   } else {
     document.getElementById('viagem-modal-title').textContent = 'Nova viagem';
+    renderResponsavelSelect('');
     renderParticipantesCheckboxes([]);
   }
 
@@ -222,6 +240,13 @@ function openViagemModal(id) {
 function salvarViagem() {
   const participantes = [...document.querySelectorAll('#v-participantes-grid input[type="checkbox"]:checked')]
     .map(cb => cb.value);
+
+  const responsavelId = document.getElementById('v-responsavel').value || null;
+
+  // Se o responsável foi selecionado mas não estava marcado nos checkboxes, nós o incluímos automaticamente
+  if (responsavelId && !participantes.includes(responsavelId)) {
+    participantes.push(responsavelId);
+  }
 
   const data = {
     nome: document.getElementById('v-nome').value.trim(),
@@ -234,7 +259,8 @@ function salvarViagem() {
     valorTotal: Number(document.getElementById('v-valor-total').value) || 0,
     valorPago: Number(document.getElementById('v-valor-pago').value) || 0,
     observacoes: document.getElementById('v-observacoes').value.trim(),
-    participantes
+    responsavelId: responsavelId,
+    participantes: participantes
   };
 
   if (!data.nome || !data.destino || !data.dataInicio || !data.dataFim) {
@@ -260,7 +286,6 @@ function salvarViagem() {
   renderViagensGrid();
 }
 
-/* ---------- Modal: Confirmar exclusão ---------- */
 function initConfirmModal() {
   document.querySelectorAll('[data-close-modal="confirm-modal"]').forEach(btn =>
     btn.addEventListener('click', () => closeModal('confirm-modal')));
@@ -281,11 +306,9 @@ function openConfirmDelete(id) {
   openModal('confirm-modal');
 }
 
-/* ---------- Helpers genéricos de modal ---------- */
 function openModal(id) { document.getElementById(id).classList.add('modal-visible'); }
 function closeModal(id) { document.getElementById(id).classList.remove('modal-visible'); }
 
-/* ---------- Deep link: viagens.html?id=xxx abre direto a edição ---------- */
 function handleDeepLink() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');

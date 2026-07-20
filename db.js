@@ -7,10 +7,10 @@
 const DB_KEYS = {
   PESSOAS: 'tw_pessoas',
   VIAGENS: 'tw_viagens',
-  SEEDED: 'tw_seeded_v2'
+  SEEDED: 'tw_seeded_v3' // Atualizado para v3 para forçar o recarregamento dos dados fixos
 };
 
-/* ---------- Helpers de data relativa a hoje (16/07/2026) ---------- */
+/* ---------- Helpers de data relativa a hoje ---------- */
 function isoDaysFromToday(days) {
   const d = new Date();
   d.setDate(d.getDate() + days);
@@ -22,20 +22,20 @@ function isoDateWithYear(monthDay, year) {
 
 /* ---------- Seed: Pessoas ---------- */
 const SEED_PESSOAS = [
-  { nome: 'Camila Rocha Ferreira', email: 'camila.rocha@email.com', telefone: '(81) 99123-4501', dataNascimento: isoDateWithYear('07-16', 1994), cidade: 'Recife', uf: 'PE', documento: '482.113.220-05', avatarColor: 'coral', observacoes: 'Cliente fiel, prefere viagens de praia.' },
-  { nome: 'Thiago Almeida Souza', email: 'thiago.almeida@email.com', telefone: '(81) 99123-4502', dataNascimento: isoDateWithYear('07-19', 1988), cidade: 'Olinda', uf: 'PE', documento: '392.884.110-22', avatarColor: 'teal', observacoes: '' },
-  { nome: 'Beatriz Nunes Cardoso', email: 'bia.cardoso@email.com', telefone: '(81) 99123-4503', dataNascimento: isoDateWithYear('07-25', 1996), cidade: 'Recife', uf: 'PE', documento: '501.223.998-31', avatarColor: 'yellow', observacoes: 'Alérgica a frutos do mar, avisar hotéis.' },
-  { nome: 'Rafael Costa Lima', email: 'rafael.lima@email.com', telefone: '(81) 99123-4504', dataNascimento: isoDateWithYear('01-08', 1991), cidade: 'Caruaru', uf: 'PE', documento: '287.556.410-77', avatarColor: 'papaya', observacoes: '' },
-  { nome: 'Juliana Martins Braga', email: 'ju.braga@email.com', telefone: '(81) 99123-4505', dataNascimento: isoDateWithYear('03-14', 1993), cidade: 'Recife', uf: 'PE', documento: '664.112.880-09', avatarColor: 'teal', observacoes: 'Viaja muito a trabalho.' },
-  { nome: 'Eduardo Pereira Gomes', email: 'edu.gomes@email.com', telefone: '(81) 99123-4506', dataNascimento: isoDateWithYear('11-30', 1985), cidade: 'Jaboatão dos Guararapes', uf: 'PE', documento: '119.774.552-64', avatarColor: 'coral', observacoes: '' },
-  { nome: 'Larissa Oliveira Dias', email: 'larissa.dias@email.com', telefone: '(81) 99123-4507', dataNascimento: isoDateWithYear('09-02', 1997), cidade: 'Recife', uf: 'PE', documento: '773.221.005-18', avatarColor: 'yellow', observacoes: 'Passaporte válido até 2029.' },
-  { nome: 'Gustavo Henrique Melo', email: 'gustavo.melo@email.com', telefone: '(81) 99123-4508', dataNascimento: isoDateWithYear('05-21', 1990), cidade: 'Igarassu', uf: 'PE', documento: '556.998.221-40', avatarColor: 'papaya', observacoes: '' },
-  { nome: 'Fernanda Ribeiro Alves', email: 'fe.alves@email.com', telefone: '(81) 99123-4509', dataNascimento: isoDateWithYear('08-04', 1989), cidade: 'Recife', uf: 'PE', documento: '341.887.660-52', avatarColor: 'teal', observacoes: 'Sempre viaja com a família (2 filhos).' },
-  { nome: 'Marcelo Santos Barros', email: 'marcelo.barros@email.com', telefone: '(81) 99123-4510', dataNascimento: isoDateWithYear('02-27', 1982), cidade: 'Recife', uf: 'PE', documento: '229.443.117-83', avatarColor: 'coral', observacoes: '' },
-  { nome: 'Patrícia Fonseca Lopes', email: 'pati.lopes@email.com', telefone: '(81) 99123-4511', dataNascimento: isoDateWithYear('12-19', 1995), cidade: 'Paulista', uf: 'PE', documento: '887.556.230-91', avatarColor: 'yellow', observacoes: '' },
-  { nome: 'André Luiz Teixeira', email: 'andre.teixeira@email.com', telefone: '(81) 99123-4512', dataNascimento: isoDateWithYear('04-11', 1992), cidade: 'Recife', uf: 'PE', documento: '118.220.774-36', avatarColor: 'papaya', observacoes: 'Prefere destinos de aventura/trilha.' },
-  { nome: 'Vanessa Cunha Moreira', email: 'vanessa.moreira@email.com', telefone: '(81) 99123-4513', dataNascimento: isoDateWithYear('07-29', 1998), cidade: 'Recife', uf: 'PE', documento: '900.113.442-05', avatarColor: 'teal', observacoes: '' },
-  { nome: 'Bruno César Farias', email: 'bruno.farias@email.com', telefone: '(81) 99123-4514', dataNascimento: isoDateWithYear('06-06', 1987), cidade: 'Camaragibe', uf: 'PE', documento: '667.334.882-19', avatarColor: 'coral', observacoes: '' }
+  { nome: 'Camila Rocha Ferreira', email: 'camila.rocha@email.com', telefone: '(81) 99123-4501', dataNascimento: isoDateWithYear('07-16', 1994), cidade: 'Recife', uf: 'PE', documento: '482.113.220-05', avatarColor: 'coral', observacoes: 'Cliente fiel, prefere viagens de praia.' }, // pes_1
+  { nome: 'Thiago Almeida Souza', email: 'thiago.almeida@email.com', telefone: '(81) 99123-4502', dataNascimento: isoDateWithYear('07-19', 1988), cidade: 'Olinda', uf: 'PE', documento: '392.884.110-22', avatarColor: 'teal', observacoes: '' }, // pes_2
+  { nome: 'Beatriz Nunes Cardoso', email: 'bia.cardoso@email.com', telefone: '(81) 99123-4503', dataNascimento: isoDateWithYear('07-25', 1996), cidade: 'Recife', uf: 'PE', documento: '501.223.998-31', avatarColor: 'yellow', observacoes: 'Alérgica a frutos do mar, avisar hotéis.' }, // pes_3
+  { nome: 'Rafael Costa Lima', email: 'rafael.lima@email.com', telefone: '(81) 99123-4504', dataNascimento: isoDateWithYear('01-08', 1991), cidade: 'Caruaru', uf: 'PE', documento: '287.556.410-77', avatarColor: 'papaya', observacoes: '' }, // pes_4
+  { nome: 'Juliana Martins Braga', email: 'ju.braga@email.com', telefone: '(81) 99123-4505', dataNascimento: isoDateWithYear('03-14', 1993), cidade: 'Recife', uf: 'PE', documento: '664.112.880-09', avatarColor: 'teal', observacoes: 'Viaja muito a trabalho.' }, // pes_5
+  { nome: 'Eduardo Pereira Gomes', email: 'edu.gomes@email.com', telefone: '(81) 99123-4506', dataNascimento: isoDateWithYear('11-30', 1985), cidade: 'Jaboatão dos Guararapes', uf: 'PE', documento: '119.774.552-64', avatarColor: 'coral', observacoes: '' }, // pes_6
+  { nome: 'Larissa Oliveira Dias', email: 'larissa.dias@email.com', telefone: '(81) 99123-4507', dataNascimento: isoDateWithYear('09-02', 1997), cidade: 'Recife', uf: 'PE', documento: '773.221.005-18', avatarColor: 'yellow', observacoes: 'Passaporte válido até 2029.' }, // pes_7
+  { nome: 'Gustavo Henrique Melo', email: 'gustavo.melo@email.com', telefone: '(81) 99123-4508', dataNascimento: isoDateWithYear('05-21', 1990), cidade: 'Igarassu', uf: 'PE', documento: '556.998.221-40', avatarColor: 'papaya', observacoes: '' }, // pes_8
+  { nome: 'Fernanda Ribeiro Alves', email: 'fe.alves@email.com', telefone: '(81) 99123-4509', dataNascimento: isoDateWithYear('08-04', 1989), cidade: 'Recife', uf: 'PE', documento: '341.887.660-52', avatarColor: 'teal', observacoes: 'Sempre viaja com a família (2 filhos).' }, // pes_9
+  { nome: 'Marcelo Santos Barros', email: 'marcelo.barros@email.com', telefone: '(81) 99123-4510', dataNascimento: isoDateWithYear('02-27', 1982), cidade: 'Recife', uf: 'PE', documento: '229.443.117-83', avatarColor: 'coral', observacoes: '' }, // pes_10
+  { nome: 'Patrícia Fonseca Lopes', email: 'pati.lopes@email.com', telefone: '(81) 99123-4511', dataNascimento: isoDateWithYear('12-19', 1995), cidade: 'Paulista', uf: 'PE', documento: '887.556.230-91', avatarColor: 'yellow', observacoes: '' }, // pes_11
+  { nome: 'André Luiz Teixeira', email: 'andre.teixeira@email.com', telefone: '(81) 99123-4512', dataNascimento: isoDateWithYear('04-11', 1992), cidade: 'Recife', uf: 'PE', documento: '118.220.774-36', avatarColor: 'papaya', observacoes: 'Prefere destinos de aventura/trilha.' }, // pes_12
+  { nome: 'Vanessa Cunha Moreira', email: 'vanessa.moreira@email.com', telefone: '(81) 99123-4513', dataNascimento: isoDateWithYear('07-29', 1998), cidade: 'Recife', uf: 'PE', documento: '900.113.442-05', avatarColor: 'teal', observacoes: '' }, // pes_13
+  { nome: 'Bruno César Farias', email: 'bruno.farias@email.com', telefone: '(81) 99123-4514', dataNascimento: isoDateWithYear('06-06', 1987), cidade: 'Camaragibe', uf: 'PE', documento: '667.334.882-19', avatarColor: 'coral', observacoes: '' } // pes_14
 ];
 
 /* ---------- Seed: Viagens ---------- */
@@ -45,84 +45,96 @@ const SEED_VIAGENS = [
     categoria: 'Lua de Mel', status: 'Confirmada',
     dataInicio: isoDaysFromToday(18), dataFim: isoDaysFromToday(25),
     valorTotal: 18500, valorPago: 12000, imagemSeed: 'noronha-1',
-    observacoes: 'Pacote com passeio de barco e mergulho incluso.'
+    observacoes: 'Pacote com passeio de barco e mergulho incluso.',
+    responsavelId: 'pes_1', participantes: ['pes_1', 'pes_2']
   },
   {
     nome: 'Réveillon em Maragogi', destino: 'Maragogi', uf: 'AL', pais: 'Brasil',
     categoria: 'Praia', status: 'Planejada',
     dataInicio: isoDaysFromToday(165), dataFim: isoDaysFromToday(170),
     valorTotal: 9800, valorPago: 2000, imagemSeed: 'maragogi-1',
-    observacoes: ''
+    observacoes: '',
+    responsavelId: 'pes_6', participantes: ['pes_6', 'pes_11', 'pes_14']
   },
   {
     nome: 'Trilha na Chapada Diamantina', destino: 'Chapada Diamantina', uf: 'BA', pais: 'Brasil',
     categoria: 'Aventura', status: 'Em andamento',
     dataInicio: isoDaysFromToday(-2), dataFim: isoDaysFromToday(4),
     valorTotal: 6200, valorPago: 6200, imagemSeed: 'chapada-1',
-    observacoes: 'Grupo pequeno, guia local contratado.'
+    observacoes: 'Grupo pequeno, guia local contratado.',
+    responsavelId: 'pes_12', participantes: ['pes_12', 'pes_4']
   },
   {
     nome: 'Congresso de Negócios em São Paulo', destino: 'São Paulo', uf: 'SP', pais: 'Brasil',
     categoria: 'Negócios', status: 'Confirmada',
     dataInicio: isoDaysFromToday(9), dataFim: isoDaysFromToday(12),
     valorTotal: 5400, valorPago: 5400, imagemSeed: 'saopaulo-1',
-    observacoes: ''
+    observacoes: '',
+    responsavelId: 'pes_5', participantes: ['pes_5']
   },
   {
     nome: 'Cultura e Vinho na Serra Gaúcha', destino: 'Gramado', uf: 'RS', pais: 'Brasil',
     categoria: 'Cultural', status: 'Planejada',
     dataInicio: isoDaysFromToday(60), dataFim: isoDaysFromToday(65),
     valorTotal: 11200, valorPago: 3000, imagemSeed: 'gramado-1',
-    observacoes: 'Inclui degustação em 3 vinícolas.'
+    observacoes: 'Inclui degustação em 3 vinícolas.',
+    responsavelId: 'pes_3', participantes: ['pes_3', 'pes_13']
   },
   {
     nome: 'Cruzeiro pelo Nordeste', destino: 'Salvador → Recife → Natal', uf: '', pais: 'Brasil',
     categoria: 'Cruzeiro', status: 'Confirmada',
     dataInicio: isoDaysFromToday(40), dataFim: isoDaysFromToday(47),
     valorTotal: 22300, valorPago: 15000, imagemSeed: 'cruzeiro-1',
-    observacoes: ''
+    observacoes: '',
+    responsavelId: 'pes_10', participantes: ['pes_10', 'pes_2']
   },
   {
     nome: 'Férias em Família em Porto de Galinhas', destino: 'Porto de Galinhas', uf: 'PE', pais: 'Brasil',
     categoria: 'Família', status: 'Concluída',
     dataInicio: isoDaysFromToday(-40), dataFim: isoDaysFromToday(-33),
     valorTotal: 8700, valorPago: 8700, imagemSeed: 'porto-galinhas-1',
-    observacoes: 'Cliente pediu berço de bebê no resort.'
+    observacoes: 'Cliente pediu berço de bebê no resort.',
+    responsavelId: 'pes_9', participantes: ['pes_9', 'pes_14', 'pes_4', 'pes_8']
   },
   {
     nome: 'Aventura na Patagônia', destino: 'El Calafate', uf: '', pais: 'Argentina',
     categoria: 'Internacional', status: 'Planejada',
     dataInicio: isoDaysFromToday(120), dataFim: isoDaysFromToday(130),
     valorTotal: 27600, valorPago: 5000, imagemSeed: 'patagonia-1',
-    observacoes: 'Verificar validade de passaporte de todos.'
+    observacoes: 'Verificar validade de passaporte de todos.',
+    responsavelId: 'pes_7', participantes: ['pes_7', 'pes_8']
   },
   {
     nome: 'Fim de Semana em Jericoacoara', destino: 'Jericoacoara', uf: 'CE', pais: 'Brasil',
     categoria: 'Praia', status: 'Cancelada',
     dataInicio: isoDaysFromToday(-10), dataFim: isoDaysFromToday(-7),
     valorTotal: 4300, valorPago: 1200, imagemSeed: 'jeri-1',
-    observacoes: 'Cancelado a pedido do cliente — reembolso parcial.'
+    observacoes: 'Cancelado a pedido do cliente — reembolso parcial.',
+    responsavelId: 'pes_1', participantes: ['pes_1', 'pes_3']
   },
   {
     nome: 'Show e Cultura em Nova York', destino: 'Nova York', uf: '', pais: 'Estados Unidos',
     categoria: 'Internacional', status: 'Em andamento',
     dataInicio: isoDaysFromToday(-1), dataFim: isoDaysFromToday(6),
     valorTotal: 31500, valorPago: 31500, imagemSeed: 'ny-1',
-    observacoes: ''
+    observacoes: '',
+    responsavelId: 'pes_13', participantes: ['pes_13', 'pes_11']
   },
   {
     nome: 'Retiro de Bem-Estar em Itacaré', destino: 'Itacaré', uf: 'BA', pais: 'Brasil',
     categoria: 'Praia', status: 'Confirmada',
     dataInicio: isoDaysFromToday(28), dataFim: isoDaysFromToday(32),
     valorTotal: 7100, valorPago: 3500, imagemSeed: 'itacare-1',
-    observacoes: ''
+    observacoes: '',
+    responsavelId: 'pes_3', participantes: ['pes_3']
   },
   {
     nome: 'Expedição à Amazônia', destino: 'Manaus', uf: 'AM', pais: 'Brasil',
     categoria: 'Aventura', status: 'Planejada',
     dataInicio: isoDaysFromToday(95), dataFim: isoDaysFromToday(101),
     valorTotal: 13400, valorPago: 4000, imagemSeed: 'amazonia-1',
-    observacoes: 'Hospedagem em lodge na selva.'
+    observacoes: 'Hospedagem em lodge na selva.',
+    responsavelId: 'pes_12', participantes: ['pes_12', 'pes_6', 'pes_10']
   }
 ];
 
@@ -136,23 +148,16 @@ function seedDatabaseIfNeeded() {
   const alreadySeeded = localStorage.getItem(DB_KEYS.SEEDED);
   if (alreadySeeded) return;
 
+  // Usa os IDs sequenciais que declaramos nos comentários (pes_1, pes_2, etc.)
   const pessoas = SEED_PESSOAS.map((p, idx) => ({
     id: `pes_${idx + 1}`,
     ...p,
     dataCadastro: isoDaysFromToday(-Math.floor(Math.random() * 200))
   }));
 
-  const pessoaIds = pessoas.map(p => p.id);
-  function randomParticipantes(min, max) {
-    const count = Math.min(pessoaIds.length, Math.floor(Math.random() * (max - min + 1)) + min);
-    const shuffled = [...pessoaIds].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  }
-
   const viagens = SEED_VIAGENS.map((v, idx) => ({
     id: `via_${idx + 1}`,
     ...v,
-    participantes: randomParticipantes(1, 4),
     dataCadastro: isoDaysFromToday(-Math.floor(Math.random() * 150))
   }));
 
@@ -188,10 +193,12 @@ function updatePessoa(id, data) {
 }
 function deletePessoa(id) {
   savePessoas(getPessoas().filter(p => p.id !== id));
-  // Remove a pessoa de qualquer viagem vinculada
+  
+  // Remove a pessoa de qualquer viagem vinculada e tira a titularidade caso ela fosse a responsável
   const viagens = getViagens().map(v => ({
     ...v,
-    participantes: v.participantes.filter(pid => pid !== id)
+    participantes: (v.participantes || []).filter(pid => pid !== id),
+    responsavelId: v.responsavelId === id ? null : v.responsavelId
   }));
   saveViagens(viagens);
 }

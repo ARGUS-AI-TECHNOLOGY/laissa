@@ -29,7 +29,7 @@
         <a href="index.html" class="nav-item" data-nav="dashboard"><i class="fa-solid fa-chart-pie"></i> Painel geral</a>
         <a href="pessoas.html" class="nav-item" data-nav="pessoas"><i class="fa-solid fa-users"></i> Pessoas</a>
         <a href="viagens.html" class="nav-item" data-nav="viagens"><i class="fa-solid fa-plane"></i> Viagens</a>
-        <a href="cadastro_turista.html" class="nav-item" data-nav="cadastro_turista"><i class="fa-solid fa-user-plus"></i> Cadastro de Turista</a>
+        <a href="cadastro_turista.html" class="nav-item" data-nav="cadastro_turista"><i class="fa-solid fa-user-plus"></i> Cadastrar Clientes</a>
     </nav>
 
     <div class="sidebar-footer">
@@ -161,9 +161,16 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="justify-content: space-between;">
         <button type="button" class="btn btn-secondary" data-close-modal="pessoa-modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Salvar pessoa</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="button" class="btn btn-secondary" id="btn-salvar-adicionar">
+            <i class="fa-solid fa-plus"></i> Salvar e adicionar outra
+          </button>
+          <button type="submit" class="btn btn-primary" id="btn-salvar-fechar">
+            <i class="fa-solid fa-check"></i> Salvar e fechar
+          </button>
+        </div>
       </div>
     </form>
   </div>

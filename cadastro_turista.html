@@ -1,52 +1,207 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel geral · TrilhaViva</title>
+  <title>Cadastro de Pacote · TrilhaViva</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300..900;1,300..900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="app-shell">
+<div class="app-shell">
 
-        <!-- ===================== SIDEBAR ===================== -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-brand">
-            <div class="brand-stamp">TV</div>
-            <div class="sidebar-brand-text">
-                <strong>TrilhaViva</strong>
-                <small>Gestão de viagens</small>
-            </div>
-            </div>
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-stamp">TV</div>
+      <div class="sidebar-brand-text">
+        <strong>TrilhaViva</strong>
+        <small>Gestão de viagens</small>
+      </div>
+    </div>
 
-            <nav class="sidebar-nav">
-            <span class="sidebar-nav-label">Navegação</span>
-                <a href="index.html" class="nav-item" data-nav="dashboard"><i class="fa-solid fa-chart-pie"></i> Painel geral</a>
-                <a href="pessoas.html" class="nav-item" data-nav="pessoas"><i class="fa-solid fa-users"></i> Pessoas</a>
-                <a href="viagens.html" class="nav-item" data-nav="viagens"><i class="fa-solid fa-plane"></i> Viagens</a>
-                <a href="cadastro_turista.html" class="nav-item" data-nav="cadastro_turista"><i class="fa-solid fa-user-plus"></i> Cadastro de Turista</a>
-            </nav>
+    <nav class="sidebar-nav">
+      <span class="sidebar-nav-label">Navegação</span>
+      <a href="index.html" class="nav-item" data-nav="dashboard"><i class="fa-solid fa-chart-pie"></i> Painel geral</a>
+      <a href="pessoas.html" class="nav-item" data-nav="pessoas"><i class="fa-solid fa-users"></i> Pessoas</a>
+      <a href="viagens.html" class="nav-item" data-nav="viagens"><i class="fa-solid fa-plane"></i> Viagens</a>
+      <a href="cadastro_turista.html" class="nav-item" data-nav="cadastro_turista"><i class="fa-solid fa-user-plus"></i> Cadastrar Clientes</a>
+    </nav>
 
-            <div class="sidebar-footer">
-            <strong>TrilhaViva</strong> · protótipo v1<br>
-            Dados salvos localmente no navegador.
+    <div class="sidebar-footer">
+      <strong>TrilhaViva</strong> · protótipo v1<br>
+      Dados salvos localmente no navegador.
+    </div>
+  </aside>
+  <div id="sidebar-overlay"></div>
+
+  <!-- ===================== CONTEÚDO ===================== -->
+  <div class="main-content">
+
+    <header class="topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+
+      <div class="topbar-greeting">
+        <strong id="greeting-text">Olá 👋</strong>
+        <small id="greeting-date"></small>
+      </div>
+      
+      <!-- Espaçador -->
+      <div style="flex:1;"></div>
+
+      <div class="topbar-actions">
+        <div class="user-chip">
+          <span class="avatar-circle avatar-sm" style="background:#FFE1DC;color:#D8452F;">MD</span>
+          <span>
+            <strong>Manu Duarte</strong>
+            <small>Consultora de viagens</small>
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <div class="page-header">
+        <h1>Novo Pacote (Grupo e Viagem)</h1>
+        <p>Cadastre uma família ou grupo de turistas e vincule-os a uma nova viagem de uma só vez.</p>
+      </div>
+
+      <form id="form-pacote">
+        
+        <!-- VISUALIZAÇÃO DO GRUPO TEMPORÁRIO -->
+        <div id="grupo-adicionado" class="filter-chip-group" style="margin-bottom: 1rem;">
+          <!-- Turistas adicionados aparecerão aqui -->
+        </div>
+
+        <!-- DADOS DO TURISTA -->
+        <section class="panel" style="margin-bottom: 1.5rem; border-left: 4px solid var(--ocean-deep);">
+          <h3 class="section-title"><i class="fa-solid fa-user-plus"></i> Adicionar Turista ao Pacote</h3>
+          
+          <div class="form-grid">
+            <div class="form-field full">
+              <label for="t-nome">Nome completo *</label>
+              <input type="text" id="t-nome" placeholder="Ex: Camila Rocha Ferreira">
             </div>
-        </aside>
-        <div id="sidebar-overlay"></div>
-    
-    </div>  
-<script src="layout.js"></script> 
+            <div class="form-field">
+              <label for="t-email">E-mail</label>
+              <input type="email" id="t-email" placeholder="nome@email.com">
+            </div>
+            <div class="form-field">
+              <label for="t-telefone">Telefone</label>
+              <input type="text" id="t-telefone" placeholder="(00) 00000-0000">
+            </div>
+            <div class="form-field">
+              <label for="t-nascimento">Data de nascimento *</label>
+              <input type="date" id="t-nascimento">
+            </div>
+            <div class="form-field">
+              <label for="t-documento">CPF / Passaporte</label>
+              <input type="text" id="t-documento" placeholder="000.000.000-00">
+            </div>
+            <div class="form-field">
+              <label for="t-cidade">Cidade</label>
+              <input type="text" id="t-cidade" placeholder="Ex: Recife">
+            </div>
+            <div class="form-field">
+              <label for="t-uf">UF</label>
+              <input type="text" id="t-uf" maxlength="2" placeholder="PE" style="text-transform:uppercase;">
+            </div>
+            <div class="form-field full" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; background: var(--bg-color); padding: 1rem; border-radius: 8px;">
+              <input type="checkbox" id="t-responsavel" style="width: 1.2rem; height: 1.2rem; cursor: pointer;">
+              <label for="t-responsavel" style="margin: 0; cursor: pointer; color: var(--text-dark); font-weight: 600;">
+                <i class="fa-solid fa-star" style="color: #FFB627;"></i> Definir esta pessoa como Titular/Responsável financeiro da viagem
+              </label>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.25rem; display: flex; justify-content: flex-end;">
+            <button type="button" class="btn btn-secondary" id="btn-add-turista">
+              <i class="fa-solid fa-plus"></i> Salvar e adicionar outro familiar
+            </button>
+          </div>
+        </section>
+
+        <!-- DADOS DA VIAGEM -->
+        <section class="panel" style="margin-bottom: 1.5rem; border-left: 4px solid var(--coral);">
+          <h3 class="section-title"><i class="fa-solid fa-plane-departure"></i> Dados da Viagem do Grupo</h3>
+          
+          <div class="form-grid">
+            <div class="form-field full">
+              <label for="v-nome">Nome do pacote / Viagem *</label>
+              <input type="text" id="v-nome" required placeholder="Ex: Férias em Família em Porto de Galinhas">
+            </div>
+            <div class="form-field">
+              <label for="v-destino">Destino *</label>
+              <input type="text" id="v-destino" required placeholder="Ex: Porto de Galinhas">
+            </div>
+            <div class="form-field">
+              <label for="v-categoria">Categoria</label>
+              <select id="v-categoria">
+                <option value="Praia">Praia</option>
+                <option value="Aventura">Aventura</option>
+                <option value="Família" selected>Família</option>
+                <option value="Lua de Mel">Lua de Mel</option>
+                <option value="Internacional">Internacional</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="v-status">Status *</label>
+              <select id="v-status">
+                <option value="Planejada" selected>Planejada</option>
+                <option value="Confirmada">Confirmada</option>
+                <option value="Em andamento">Em andamento</option>
+                <option value="Concluída">Concluída</option>
+                <option value="Cancelada">Cancelada</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="v-data-inicio">Data de Ida *</label>
+              <input type="date" id="v-data-inicio" required>
+            </div>
+            <div class="form-field">
+              <label for="v-data-fim">Data de Retorno *</label>
+              <input type="date" id="v-data-fim" required>
+            </div>
+            <div class="form-field">
+              <label for="v-valor">Valor Total (R$) *</label>
+              <input type="number" id="v-valor" required placeholder="Ex: 8500">
+            </div>
+            <div class="form-field">
+              <label for="v-pago">Valor já pago (R$)</label>
+              <input type="number" id="v-pago" placeholder="Ex: 2000">
+            </div>
+          </div>
+        </section>
+
+        <!-- FINALIZAR -->
+        <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+          <a href="index.html" class="btn btn-secondary">Cancelar</a>
+          <button type="submit" class="btn btn-primary" style="padding: .8rem 2rem; font-size: 1rem;">
+            <i class="fa-solid fa-check-double"></i> Finalizar Cadastro Completo
+          </button>
+        </div>
+
+      </form>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="db.js"></script>
+<script src="utils.js"></script>
+<script src="layout.js"></script>
+<script src="cadastro_turista.js"></script> <!-- Script que criaremos abaixo -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     initSidebarActiveState('cadastro_turista');
-    checkTodaysBirthdaysModal();
   });
-</script> 
+</script>
 </body>
 </html>

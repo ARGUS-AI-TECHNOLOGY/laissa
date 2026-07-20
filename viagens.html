@@ -29,7 +29,7 @@
       <a href="index.html" class="nav-item" data-nav="dashboard"><i class="fa-solid fa-chart-pie"></i> Painel geral</a>
       <a href="pessoas.html" class="nav-item" data-nav="pessoas"><i class="fa-solid fa-users"></i> Pessoas</a>
       <a href="viagens.html" class="nav-item" data-nav="viagens"><i class="fa-solid fa-plane"></i> Viagens</a>
-      <a href="cadastro_turista.html" class="nav-item" data-nav="cadastro_turista"><i class="fa-solid fa-user-plus"></i> Cadastro de Turista</a>
+      <a href="cadastro_turista.html" class="nav-item" data-nav="cadastro_turista"><i class="fa-solid fa-user-plus"></i> Cadastrar Clientes</a>
     </nav>
 
     <div class="sidebar-footer">
@@ -187,8 +187,18 @@
             <label for="v-valor-pago">Valor já pago (R$)</label>
             <input type="number" id="v-valor-pago" min="0" step="50" placeholder="0">
           </div>
+          
+          <!-- NOVO CAMPO: RESPONSÁVEL -->
+          <div class="form-field full" style="background: #FFF9F2; padding: 1rem; border-radius: 8px; border: 1px dashed #FFB627;">
+            <label for="v-responsavel"><i class="fa-solid fa-star" style="color: #FFB627;"></i> Responsável Financeiro / Titular</label>
+            <select id="v-responsavel">
+              <!-- As opções serão geradas pelo JavaScript -->
+            </select>
+            <small style="color: var(--ink-soft); font-size: 0.75rem; margin-top: 0.3rem;">O titular será automaticamente incluído como participante da viagem.</small>
+          </div>
+
           <div class="form-field full">
-            <label>Participantes</label>
+            <label>Outros Participantes</label>
             <div class="checkbox-people-grid" id="v-participantes-grid"></div>
           </div>
           <div class="form-field full">

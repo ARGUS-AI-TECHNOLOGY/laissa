@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ---------- Render principal ---------- */
+/* ---------- Render principal ---------- */
 function renderPessoasGrid() {
   const termo = (document.getElementById('pessoas-busca')?.value || '').toLowerCase().trim();
   const ordenar = document.getElementById('pessoas-ordenar')?.value || 'nome';
@@ -62,8 +63,13 @@ function renderPessoasGrid() {
 
   grid.innerHTML = pessoas.map(p => {
     const idade = calculateAge(p.dataNascimento);
-    const viagensDaPessoa = viagens.filter(v => v.participantes.includes(p.id)).length;
+    const viagensDaPessoa = viagens.filter(v => (v.participantes || []).includes(p.id)).length;
+    
+    // NOVIDADE: Conta em quantas viagens essa pessoa é a responsável financeira
+    const titularEm = viagens.filter(v => v.responsavelId === p.id).length;
+    
     const aniversarioHoje = p._diasAniversario === 0;
+    
     return `
     <div class="pessoa-card" data-id="${p.id}">
       ${aniversarioHoje ? '<span class="pessoa-card-birthday-flag" title="Aniversário hoje!">🎂</span>' : ''}
@@ -79,6 +85,9 @@ function renderPessoasGrid() {
         <span><i class="fa-solid fa-phone"></i> ${escapeHTML(p.telefone || 'Não informado')}</span>
         <span><i class="fa-solid fa-cake-candles"></i> ${formatDate(p.dataNascimento, 'completo')}</span>
         <span><i class="fa-solid fa-suitcase-rolling"></i> ${viagensDaPessoa} viagem${viagensDaPessoa !== 1 ? 'ns' : ''} vinculada${viagensDaPessoa !== 1 ? 's' : ''}</span>
+        
+        <!-- NOVIDADE: Mostra a estrela de titular se ela for responsável por alguma viagem -->
+        ${titularEm > 0 ? `<span><i class="fa-solid fa-star" style="color:#FFB627;"></i> Titular em ${titularEm} pacote${titularEm !== 1 ? 's' : ''}</span>` : ''}
       </div>
       <div class="pessoa-card-actions">
         <button class="btn btn-secondary btn-sm" style="flex:1;" data-edit-pessoa="${p.id}"><i class="fa-solid fa-pen"></i> Editar</button>
@@ -116,9 +125,19 @@ function initPessoaModal() {
   document.querySelectorAll('[data-close-modal="pessoa-modal"]').forEach(btn =>
     btn.addEventListener('click', () => closeModal('pessoa-modal')));
 
+  // Submissão normal do formulário (botão "Salvar e fechar")
   document.getElementById('pessoa-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    salvarPessoa();
+    salvarPessoa(true); // true = deve fechar o modal ao final
+  });
+
+  // Ação do novo botão "Salvar e adicionar outra"
+  document.getElementById('btn-salvar-adicionar').addEventListener('click', () => {
+    const form = document.getElementById('pessoa-form');
+    // reportValidity() força o HTML a checar se os campos com "required" foram preenchidos
+    if (form.reportValidity()) {
+      salvarPessoa(false); // false = NÃO fechar o modal ao final
+    }
   });
 }
 
@@ -126,6 +145,9 @@ function openPessoaModal(id) {
   pessoaEditandoId = id;
   const form = document.getElementById('pessoa-form');
   form.reset();
+
+  const btnAdicionarOutra = document.getElementById('btn-salvar-adicionar');
+  const btnSalvarFechar = document.getElementById('btn-salvar-fechar');
 
   if (id) {
     const p = getPessoaById(id);
@@ -141,14 +163,22 @@ function openPessoaModal(id) {
     document.getElementById('f-observacoes').value = p.observacoes || '';
     const radio = form.querySelector(`input[name="avatarColor"][value="${p.avatarColor}"]`);
     if (radio) radio.checked = true;
+
+    // Se estiver editando, escondemos o botão de "Adicionar outra" para não confundir o usuário
+    btnAdicionarOutra.style.display = 'none';
+    btnSalvarFechar.innerHTML = '<i class="fa-solid fa-check"></i> Salvar alterações';
   } else {
     document.getElementById('pessoa-modal-title').textContent = 'Nova pessoa';
+    
+    // Se for cadastro novo, garantimos que o botão "Adicionar outra" apareça
+    btnAdicionarOutra.style.display = 'inline-flex';
+    btnSalvarFechar.innerHTML = '<i class="fa-solid fa-check"></i> Salvar e fechar';
   }
 
   openModal('pessoa-modal');
 }
 
-function salvarPessoa() {
+function salvarPessoa(fecharModal) {
   const data = {
     nome: document.getElementById('f-nome').value.trim(),
     email: document.getElementById('f-email').value.trim(),
@@ -174,9 +204,22 @@ function salvarPessoa() {
     showToast('Pessoa cadastrada com sucesso.', 'sucesso');
   }
 
-  closeModal('pessoa-modal');
   renderPessoasGrid();
-  updateNotificationBellContent();
+  
+  // Atualiza a notificação de aniversários, caso a função exista no seu código
+  if (typeof updateNotificationBellContent === 'function') {
+    updateNotificationBellContent();
+  }
+
+  if (fecharModal) {
+    // Fecha o modal se o usuário clicou em "Salvar e fechar"
+    closeModal('pessoa-modal');
+  } else {
+    // Se clicou em "Salvar e adicionar outra", reseta o form, limpa os IDs e foca no nome
+    document.getElementById('pessoa-form').reset();
+    pessoaEditandoId = null;
+    document.getElementById('f-nome').focus(); // Coloca o cursor piscando no campo Nome
+  }
 }
 
 /* ---------- Modal: Confirmar exclusão ---------- */

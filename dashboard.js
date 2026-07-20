@@ -167,7 +167,10 @@ function renderAniversariosWidget() {
 function renderProximasViagensWidget() {
   const el = document.getElementById('proximas-viagens-widget');
   const hoje = new Date().toISOString().slice(0, 10);
-  const proximas = getViagens()
+  const viagens = getViagens();
+  const pessoas = getPessoas(); // NOVIDADE: Puxando as pessoas para achar o nome do titular
+  
+  const proximas = viagens
     .filter(v => v.status !== 'Cancelada' && v.status !== 'Concluída')
     .sort((a, b) => a.dataInicio.localeCompare(b.dataInicio))
     .slice(0, 5);
@@ -180,12 +183,18 @@ function renderProximasViagensWidget() {
   el.innerHTML = proximas.map(v => {
     const dias = daysUntil(v.dataInicio);
     const quando = v.status === 'Em andamento' ? 'Em andamento agora' : dias === 0 ? 'Começa hoje' : dias < 0 ? 'Em curso' : `Em ${dias} dias`;
+    
+    // NOVIDADE: Encontrando o titular
+    const titular = pessoas.find(p => p.id === v.responsavelId);
+    const nomeTitular = titular ? titular.nome.split(' ')[0] : 'Sem titular';
+
     return `
       <a href="viagens.html?id=${v.id}" class="trip-mini">
         <span class="trip-mini-icon" style="background:var(--ocean-mist);color:var(--ocean-deep);"><i class="fa-solid ${categoriaIcon(v.categoria)}"></i></span>
         <span class="trip-mini-info">
           <strong>${escapeHTML(v.nome)}</strong>
           <small>${escapeHTML(v.destino)} · ${formatDateRange(v.dataInicio, v.dataFim)}</small>
+          <small style="color:var(--ink-soft); margin-top: 2px;"><i class="fa-solid fa-star" style="color:#FFB627; font-size: 0.75rem;"></i> Titular: ${escapeHTML(nomeTitular)}</small>
         </span>
         <span class="postmark later" style="margin-left:0;">${quando}</span>
       </a>`;
@@ -196,26 +205,46 @@ function renderProximasViagensWidget() {
 function renderDestinosWidget() {
   const el = document.getElementById('destinos-widget');
   const viagens = getViagens();
-  const contagem = {};
-  viagens.forEach(v => { contagem[v.destino] = (contagem[v.destino] || 0) + 1; });
 
-  const ranking = Object.entries(contagem).sort((a, b) => b[1] - a[1]).slice(0, 5);
-  const max = ranking.length ? ranking[0][1] : 1;
+  // Agrupar por destino, guardando também a imagem e o país
+  const contagem = {};
+  viagens.forEach(v => {
+    if (!contagem[v.destino]) {
+      contagem[v.destino] = { 
+        count: 0, 
+        nome: v.destino, 
+        image: v.imagemSeed || v.id 
+      };
+    }
+    contagem[v.destino].count += 1;
+  });
+
+  // Ordenar do maior para o menor e pegar os 4 primeiros (para o grid ficar bonito)
+  const ranking = Object.values(contagem).sort((a, b) => b.count - a.count).slice(0, 4);
 
   if (ranking.length === 0) {
     el.innerHTML = `<div class="empty-state"><i class="fa-solid fa-map-location-dot"></i><strong>Nada por aqui</strong>Cadastre viagens para ver o ranking.</div>`;
     return;
   }
 
-  el.innerHTML = `<div style="display:flex;flex-direction:column;gap:.9rem;">` + ranking.map(([destino, count], idx) => `
-    <div>
-      <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.35rem;">
-        <span><strong class="font-mono" style="color:var(--coral);">#${idx + 1}</strong> &nbsp;${escapeHTML(destino)}</span>
-        <span class="font-mono" style="color:var(--ink-soft);">${count} viagem${count > 1 ? 'ns' : ''}</span>
+  // Gera um grid responsivo com cartões de imagem
+  el.innerHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">` + 
+    ranking.map((dest, idx) => `
+      <div style="position: relative; height: 130px; border-radius: 12px; overflow: hidden; background-image: url('https://picsum.photos/seed/${encodeURIComponent(dest.image)}/400/200'); background-size: cover; background-position: center; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: transform 0.2s;">
+        <!-- Máscara de gradiente para dar leitura ao texto -->
+        <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(10, 75, 71, 0.9) 0%, rgba(10, 75, 71, 0.2) 60%, transparent 100%);"></div>
+        
+        <!-- Posição no ranking -->
+        <div style="position: absolute; top: 10px; left: 10px; background: var(--coral); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; font-family: var(--font-mono);">#${idx + 1}</div>
+        
+        <!-- Textos -->
+        <div style="position: absolute; bottom: 12px; left: 12px; right: 12px; color: white;">
+          <strong style="display: block; font-size: 1.1rem; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 2px;">${escapeHTML(dest.nome)}</strong>
+          <small style="font-size: 0.8rem; color: #D7EDE9; font-family: var(--font-mono);">${dest.count} pacote${dest.count > 1 ? 's' : ''}</small>
+        </div>
       </div>
-      <div class="payment-bar"><div class="payment-bar-fill" style="width:${(count / max) * 100}%;"></div></div>
-    </div>
-  `).join('') + `</div>`;
+    `).join('') + 
+    `</div>`;
 }
 
 /* ---------- Busca global (topo) ---------- */
